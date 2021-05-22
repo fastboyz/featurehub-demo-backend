@@ -1,6 +1,7 @@
 package com.example.heroTour;
 
 import io.featurehub.client.ClientContext;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -13,8 +14,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/hero")
 public class HeroController {
@@ -40,6 +44,18 @@ public class HeroController {
     @Produces("application/json")
     public Response list() {
         return Response.ok(Hero.findAll().list()).build();
+    }
+
+    @GET
+    @Path("/search")
+    @Produces("application/json")
+    public Response search(@QueryParam("name") String term) {
+        List<Hero> heroes = Hero.findAll().list();
+        if (heroes == null) {
+            return Response.ok().build();
+        }
+        return Response.ok(heroes.stream().filter(hero -> StringUtils.
+                containsIgnoreCase(hero.getName(), term)).collect(Collectors.toList())).build();
     }
 
     @Transactional
