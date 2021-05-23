@@ -21,6 +21,6 @@ public class ExampleResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "hello world! " + contextProvider.get().feature("SUBMIT_COLOR_BUTTON").getString();
+        return "hello world! " + contextProvider.get().isEnabled("TEST");
     }
 }

@@ -63,3 +63,9 @@ If you want to learn more about building native executables, please consult http
 REST is easy peasy with this Hello World RESTEasy resource.
 
 [Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+
+```dockerfile
+docker run -d --name  postgres-quarkus-hibernate -e POSTGRES_USER=hibernate \        ok  22:48:26
+-e POSTGRES_PASSWORD=hibernate -e POSTGRES_DB=hibernate_db \
+-p 5433:5432 postgres:13.1
+```
