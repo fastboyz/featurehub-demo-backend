@@ -1,5 +1,6 @@
 package com.example.heroTour;
 
+import com.example.feature.Features;
 import io.featurehub.client.ClientContext;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,12 +51,15 @@ public class HeroController {
     @Path("/search")
     @Produces("application/json")
     public Response search(@QueryParam("name") String term) {
-        List<Hero> heroes = Hero.findAll().list();
-        if (heroes == null) {
-            return Response.ok().build();
+        if(contextProvider.get().isEnabled(Features.SEARCH_FTGL)){
+            List<Hero> heroes = Hero.findAll().list();
+            if (heroes == null) {
+                return Response.ok().build();
+            }
+            return Response.ok(heroes.stream().filter(hero -> StringUtils.
+                    containsIgnoreCase(hero.getName(), term)).collect(Collectors.toList())).build();
         }
-        return Response.ok(heroes.stream().filter(hero -> StringUtils.
-                containsIgnoreCase(hero.getName(), term)).collect(Collectors.toList())).build();
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     @Transactional
@@ -84,7 +88,6 @@ public class HeroController {
         hero.persist();
 
         return Response.ok(hero).build();
-
     }
 
     @Transactional
